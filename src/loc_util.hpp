@@ -3,12 +3,12 @@
 using namespace Rcpp;
 using namespace std;
 
-arma::Col<int> ff_C(int x);
+arma::Mat<int> ff_C(int x);
 List fix_node_and_edge_par(arma::Cube<int> node_par, List edge_par);
 
-// Two state spinor function
-arma::Col<int> ff_C(int x){
-  arma::Col<int> aspinor(2);
+// Two state spinor function for internal use. We Don't want to pass in R functions so use the C version
+arma::Mat<int> ff_C(int x){
+  arma::Mat<int> aspinor(2,1);
   
   aspinor[0] = (x == 1);
   aspinor[1] = (x == 2);
@@ -17,9 +17,10 @@ arma::Col<int> ff_C(int x){
   
 }
 
-// CRF default node_par and edge_par are 3D "Cubes" with 1 slice.
-// This makes them arma integer matrices to head of annoying type 
-// conflicts and code bloat.
+// CRF default node_par and edge_par are 3D "Cubes" with 1 slice (3 index R arrays).
+// This function makes them armadillo integer matrices (2D) to head of annoying type 
+// conflicts and code bloat from re-use. For now, we export to R as well for testing.
+// Ultimately intended for internal use.
 // [[Rcpp::export]]
 List fix_node_and_edge_par(arma::Cube<int> node_par, List edge_par){
   

@@ -69,3 +69,12 @@ for(int i=0; i<edge_par.size(); ++i) {
 //arma::Mat<int> node_par = theta_pars["node_par"];
 //List           edge_par = theta_pars["edge_par"];
 
+
+
+Rcout << "Edge: " << i << " "<< edge_mat(i,0) << "---" << edge_mat(i,1) << endl;
+Rcout << "Left spin: "  << config(left_off) << ", Right spin: " << config(right_off) << endl;
+Rcout << endl;
+Rcout << ff_C(config(left_off)) << aepm << ff_C(config(right_off)) << endl;
+Rcout << endl;
+Rcout << "tmp: " << tmp << "phi_off: " << phi_off << endl;
+Rcout << "===========================" << endl;

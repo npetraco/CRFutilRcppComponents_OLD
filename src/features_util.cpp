@@ -4,23 +4,8 @@
 using namespace Rcpp;
 using namespace std;
 
-// //[[Rcpp::export]]
-// arma::Col<int> ff_C(int x){
-//   arma::Col<int> aspinor(2);
-//   
-//   //Rcout << x << endl;
-//   aspinor[0] = (x == 1);
-//   aspinor[1] = (x == 2);
-//   
-//   return(aspinor);
-//   
-// }
-//Place dependent functions above call or//declare the function definition with:
-//arma::Col<int> ff_C(int x);
-
-
 // [[Rcpp::export]]
-arma::Row<int> phi_features_C(arma::Col<int> config, arma::mat edge_mat, arma::Mat<int> node_par, List edge_par) {
+arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par) {
   
   int num_nodes = config.size();
   int num_edges = edge_mat.n_rows;
@@ -38,8 +23,8 @@ arma::Row<int> phi_features_C(arma::Col<int> config, arma::mat edge_mat, arma::M
     }
   }
   
-  // Initialize a phi vector:
-  arma::Row<int> phi_vec(num_params);
+  // Initialize a phi (row) vector. Choose row vector to stay with R code in compute.model.matrix:
+  arma::Mat<int> phi_vec(1,num_params);
   phi_vec.zeros();
   
   // Nodes: \phi_i({\bf X}) = 1-\delta_{{\bf f}^{\dagger}(X_i) {\boldsymbol \tau}_i, 0}
@@ -48,6 +33,32 @@ arma::Row<int> phi_features_C(arma::Col<int> config, arma::mat edge_mat, arma::M
     
     // Usually reversed but these are rowvec . colvec. Doing it this way avoids a transpose 
     phi_off = dot( node_par.row(i), ff_C(config(i)) ) - 1; // -1 bec we want offsets NOT indices
+
+    // Kronecker delta part:
+    if(phi_off != -1) {
+      phi_vec(phi_off) = 1; 
+    }
+    
+  }
+
+  // Edges: \phi_{k_{[ij]}}({\bf X}) = 1-\delta_{{\bf f}^{\dagger}(X_i) {\boldsymbol \omega}_{ij} {\bf f}(X_j) , 0}
+  arma::Mat<int> aepm;
+  for(int i=0; i<num_edges; ++i) {
+
+    // Check and see if we reached the end of phi. No point in doing the rest of the edges if we did:
+    // NOTE: assumes parameters have unique consecutive indices, so no wierd parameterizations.
+    // Sticking to "standard" or "flexible" should be safe.
+    if(phi_off == num_params) {
+      break;
+    }
+
+    aepm = as<arma::Mat<int>>(edge_par(i));
+    int left_off  = edge_mat(i,0) - 1;                                    // offset NOT index, do -1
+    int right_off = edge_mat(i,1) - 1;                                    // offset NOT index, do -1
+    
+    arma::Mat<int> tmp = ff_C(config(left_off)).t() * aepm * ff_C(config(right_off));
+    
+    phi_off = tmp(0,0) - 1;                                               // offset NOT index, do -1
 
     // Kronecker delta part:
     if(phi_off != -1) {

@@ -7,13 +7,13 @@
 using namespace Rcpp;
 
 // phi_features_C
-arma::Row<int> phi_features_C(arma::Col<int> config, arma::mat edge_mat, arma::Mat<int> node_par, List edge_par);
+arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par);
 RcppExport SEXP _CRFutilRcppComponents_phi_features_C(SEXP configSEXP, SEXP edge_matSEXP, SEXP node_parSEXP, SEXP edge_parSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::Col<int> >::type config(configSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type edge_mat(edge_matSEXP);
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type edge_mat(edge_matSEXP);
     Rcpp::traits::input_parameter< arma::Mat<int> >::type node_par(node_parSEXP);
     Rcpp::traits::input_parameter< List >::type edge_par(edge_parSEXP);
     rcpp_result_gen = Rcpp::wrap(phi_features_C(config, edge_mat, node_par, edge_par));

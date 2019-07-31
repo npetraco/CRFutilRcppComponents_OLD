@@ -1,7 +1,9 @@
 library(CRFutil)
+library(rbenchmark)
+library(microbenchmark)
 
 # Make up a random graph
-g <- erdos.renyi.game(10, 0.6, typ="gnp")
+g <- erdos.renyi.game(14, 0.8, typ="gnp")
 dev.off()
 plot(g)
 
@@ -29,7 +31,7 @@ mrf.sample.plot(samps)
 
 configs.and.counts <- as.data.frame(ftable(data.frame(samps)))
 head(configs.and.counts)
-configs <- configs.and.counts[,1:10]
+configs <- configs.and.counts[,1:ncol(samps)]
 configs <- as.matrix(sapply(configs, as.numeric))
 head(configs)
 
@@ -38,8 +40,67 @@ theta.pars   <- fix_node_and_edge_par(node_par = rmod$node.par, edge_par = rmod$
 jridx <- 1
 jridx <- sample(1:nrow(configs), size = 1)
 configs[jridx,]
+
 test.phi.vec <- phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
 test.phi.vec
-test.phi.vec <- NULL
+#test.phi.vec <- NULL
 
-rmod$edge.par[[1]]
+
+test.phi.vec2 <- phi.features(config = configs[jridx,], 
+             edges.mat = rmod$edges, 
+             node.par = rmod$node.par, 
+             edge.par = rmod$edge.par, 
+             ff=f0)
+length(test.phi.vec2) == sum(test.phi.vec == test.phi.vec2)
+
+# Check to make sure we get the same phi vectors between the R and C code: 
+chk.phis <- rep(FALSE, nrow(configs))
+for(i in 1:nrow(configs)) {
+  jridx <- i
+
+  test.phi.vec  <- phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
+  test.phi.vec2 <- phi.features(config = configs[jridx,], 
+                                edges.mat = rmod$edges, 
+                                node.par = rmod$node.par, 
+                                edge.par = rmod$edge.par, 
+                                ff=f0)
+  
+  chk.phis[i] <- length(test.phi.vec2) == sum(test.phi.vec == test.phi.vec2)
+  
+}
+# Number of mistakes:
+sum(!chk.phis)
+
+
+# Speed check 1:
+for(i in 1:nrow(configs)) {
+  jridx <- i
+  
+  test.phi.vec  <- phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
+
+  print(i)
+  
+}
+
+# Speed check 2:
+benchmark(
+  test.phi.vec  <- phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par),
+  test.phi.vec2 <- phi.features(config = configs[jridx,], 
+                                edges.mat = rmod$edges, 
+                                node.par = rmod$node.par, 
+                                edge.par = rmod$edge.par, 
+                                ff=f0),replications = 1000
+)
+
+
+microbenchmark(
+  phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par),
+  phi.features(config = configs[jridx,], 
+                                edges.mat = rmod$edges, 
+                                node.par = rmod$node.par, 
+                                edge.par = rmod$edge.par, 
+                                ff=f0)
+)
+
+526.45265/30.64928
+
