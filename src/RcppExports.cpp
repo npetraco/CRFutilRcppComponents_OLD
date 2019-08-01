@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // phi_features_C
-arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par);
-RcppExport SEXP _CRFutilRcppComponents_phi_features_C(SEXP configSEXP, SEXP edge_matSEXP, SEXP node_parSEXP, SEXP edge_parSEXP) {
+arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params);
+RcppExport SEXP _CRFutilRcppComponents_phi_features_C(SEXP configSEXP, SEXP edge_matSEXP, SEXP node_parSEXP, SEXP edge_parSEXP, SEXP num_paramsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,7 +16,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::Mat<int> >::type edge_mat(edge_matSEXP);
     Rcpp::traits::input_parameter< arma::Mat<int> >::type node_par(node_parSEXP);
     Rcpp::traits::input_parameter< List >::type edge_par(edge_parSEXP);
-    rcpp_result_gen = Rcpp::wrap(phi_features_C(config, edge_mat, node_par, edge_par));
+    Rcpp::traits::input_parameter< int >::type num_params(num_paramsSEXP);
+    rcpp_result_gen = Rcpp::wrap(phi_features_C(config, edge_mat, node_par, edge_par, num_params));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -29,6 +30,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::Cube<int> >::type node_par(node_parSEXP);
     Rcpp::traits::input_parameter< List >::type edge_par(edge_parSEXP);
     rcpp_result_gen = Rcpp::wrap(fix_node_and_edge_par(node_par, edge_par));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fix_node_and_edge_par2
+List fix_node_and_edge_par2(arma::Cube<int> node_par, List edge_par);
+RcppExport SEXP _CRFutilRcppComponents_fix_node_and_edge_par2(SEXP node_parSEXP, SEXP edge_parSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::Cube<int> >::type node_par(node_parSEXP);
+    Rcpp::traits::input_parameter< List >::type edge_par(edge_parSEXP);
+    rcpp_result_gen = Rcpp::wrap(fix_node_and_edge_par2(node_par, edge_par));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -77,8 +90,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_CRFutilRcppComponents_phi_features_C", (DL_FUNC) &_CRFutilRcppComponents_phi_features_C, 4},
+    {"_CRFutilRcppComponents_phi_features_C", (DL_FUNC) &_CRFutilRcppComponents_phi_features_C, 5},
     {"_CRFutilRcppComponents_fix_node_and_edge_par", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par, 2},
+    {"_CRFutilRcppComponents_fix_node_and_edge_par2", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par2, 2},
     {"_CRFutilRcppComponents_rcpparma_hello_world", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_hello_world, 0},
     {"_CRFutilRcppComponents_rcpparma_outerproduct", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_outerproduct, 1},
     {"_CRFutilRcppComponents_rcpparma_innerproduct", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_innerproduct, 1},

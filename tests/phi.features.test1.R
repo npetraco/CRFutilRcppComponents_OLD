@@ -46,6 +46,7 @@ test.phi.vec
 #test.phi.vec <- NULL
 
 
+
 test.phi.vec2 <- phi.features(config = configs[jridx,], 
              edges.mat = rmod$edges, 
              node.par = rmod$node.par, 
@@ -104,3 +105,4 @@ microbenchmark(
 
 526.45265/30.64928
 
+fix_node_and_edge_par2(node_par = rmod$node.par, edge_par = rmod$edge.par)

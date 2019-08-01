@@ -5,25 +5,31 @@ using namespace Rcpp;
 using namespace std;
 
 // [[Rcpp::export]]
-arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par) {
+arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params=0) {
   
   int num_nodes = config.size();
   int num_edges = edge_mat.n_rows;
 
-  // Find num_params buy digging out max in par matrices. 
-  // Stupid not to just send this in, but done to keep 
-  // parity with the function signature of the original R code.....  
-  // MOVE THIS OUT LATER SO WE DON'T HAVE TO DO IT OVER AND OVER AGAIN IF WE USE THIS FUNCTION IN A LOOP
-  int num_params = node_par.max();
-  int amax       = 0;
-  for(int i=0; i<edge_par.size(); ++i) {
-    amax = as<arma::Mat<int>>( edge_par(i) ).max(); // a copy performed with this as<>() ????
-    if(amax > num_params){
-      num_params = amax;
+  // The original R function determines this everytime it is called. This is stupid and will
+  // slow things down. To keep parity with the R function signature, by default the number of
+  // parameters will be calculated. However the user can also prespcify it and change the default
+  // value from 0 so the loop below isn't excecuted over an over when calling the function
+  // multiple times.
+  if(num_params == 0) {
+    
+    num_params = node_par.max();
+    int amax       = 0;
+    for(int i=0; i<edge_par.size(); ++i) {
+      amax = as<arma::Mat<int>>( edge_par(i) ).max(); // a copy performed with this as<>() ????
+      if(amax > num_params){
+        num_params = amax;
+      }
     }
-  }
+    
+  } 
   
-  // Initialize a phi (row) vector. Choose row vector to stay with R code in compute.model.matrix:
+  // Initialize a phi (row) vector. Choose row vector. Thats what the R code in compute.model.matrix assumes.
+  // We do this here to keep parity with the R code.
   arma::Mat<int> phi_vec(1,num_params);
   phi_vec.zeros();
   
@@ -70,4 +76,3 @@ arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, ar
   return phi_vec;
   
 }
-
