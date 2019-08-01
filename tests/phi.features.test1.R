@@ -3,7 +3,7 @@ library(rbenchmark)
 library(microbenchmark)
 
 # Make up a random graph
-g <- erdos.renyi.game(14, 0.8, typ="gnp")
+g <- erdos.renyi.game(16, 1, typ="gnp")
 dev.off()
 plot(g)
 
@@ -41,7 +41,7 @@ jridx <- 1
 jridx <- sample(1:nrow(configs), size = 1)
 configs[jridx,]
 
-test.phi.vec <- phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
+test.phi.vec <- phi_features_C(as.matrix(configs[jridx,]), rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
 test.phi.vec
 #test.phi.vec <- NULL
 
@@ -59,7 +59,7 @@ chk.phis <- rep(FALSE, nrow(configs))
 for(i in 1:nrow(configs)) {
   jridx <- i
 
-  test.phi.vec  <- phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
+  test.phi.vec  <- phi_features_C(as.matrix(configs[jridx,]), rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
   test.phi.vec2 <- phi.features(config = configs[jridx,], 
                                 edges.mat = rmod$edges, 
                                 node.par = rmod$node.par, 
@@ -85,7 +85,7 @@ for(i in 1:nrow(configs)) {
 
 # Speed check 2:
 benchmark(
-  test.phi.vec  <- phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par),
+  test.phi.vec  <- phi_features_C(as.matrix(configs[jridx,]), rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par),
   test.phi.vec2 <- phi.features(config = configs[jridx,], 
                                 edges.mat = rmod$edges, 
                                 node.par = rmod$node.par, 
@@ -95,7 +95,7 @@ benchmark(
 
 
 microbenchmark(
-  phi_features_C(configs[jridx,], rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par),
+  phi_features_C(as.matrix(configs[jridx,]), rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par),
   phi.features(config = configs[jridx,], 
                                 edges.mat = rmod$edges, 
                                 node.par = rmod$node.par, 
@@ -105,4 +105,27 @@ microbenchmark(
 
 526.45265/30.64928
 
-fix_node_and_edge_par2(node_par = rmod$node.par, edge_par = rmod$edge.par)
+#fix_node_and_edge_par2(node_par = rmod$node.par, edge_par = rmod$edge.par)
+
+# C loop: (much faster, but num_par pass in causing a bug....)
+junk <- compute_model_matrix(configs, rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)
+junk <- NULL
+dim(junk)
+head(junk)
+
+
+# R loop:
+rmod$n.par
+junk <- t(sapply(1:nrow(configs), function(xx){
+  #phi.features(config = configs[xx,], edges.mat, node.par, edge.par, ff)
+  phi_features_C(as.matrix(configs[jridx,]), rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)  
+}))
+
+
+# Compare: 
+benchmark(
+  junk  <- compute_model_matrix(configs, rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par),
+  junk2 <- t(sapply(1:nrow(configs), function(xx){
+    phi_features_C(as.matrix(configs[jridx,]), rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)  
+  }))
+)

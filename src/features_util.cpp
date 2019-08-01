@@ -5,7 +5,7 @@ using namespace Rcpp;
 using namespace std;
 
 // [[Rcpp::export]]
-arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params=0) {
+arma::Mat<int> phi_features_C(arma::Mat<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default=0) {
   
   int num_nodes = config.size();
   int num_edges = edge_mat.n_rows;
@@ -15,7 +15,8 @@ arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, ar
   // parameters will be calculated. However the user can also prespcify it and change the default
   // value from 0 so the loop below isn't excecuted over an over when calling the function
   // multiple times.
-  if(num_params == 0) {
+  int num_params;
+  if(num_params_default == 0) {
     
     num_params = node_par.max();
     int amax       = 0;
@@ -23,6 +24,8 @@ arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, ar
       amax = as<arma::Mat<int>>( edge_par(i) ).max(); // a copy performed with this as<>() ????
       if(amax > num_params){
         num_params = amax;
+      } else {
+        num_params = num_params_default;
       }
     }
     
@@ -74,5 +77,46 @@ arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, ar
   }
 
   return phi_vec;
+  
+}
+
+// [[Rcpp::export]]
+arma::Mat<int> compute_model_matrix(arma::Mat<int> configs, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default = 0) {
+  
+  int num_configs = configs.n_rows;
+  int num_params;
+
+  if(num_params_default == 0) {
+
+    num_params = node_par.max();
+    int amax       = 0;
+    for(int i=0; i<edge_par.size(); ++i) {
+      amax = as<arma::Mat<int>>( edge_par(i) ).max(); // a copy performed with this as<>() ????
+      if(amax > num_params){
+        num_params = amax;
+      } else {
+        num_params = num_params_default;
+      }
+    }
+
+  }
+  
+  //Rcout << num_configs << endl;
+  //Rcout << num_params << endl;
+  
+  arma::Mat<int> model_mat(num_configs, num_params);
+  
+  //arma::Mat<int> aphi(num_params,1);
+  for(int i=0; i<num_configs; ++i){
+    //Rcout << i << endl;
+    //Rcout << configs.row(i) << endl;
+    //aphi = phi_features_C(configs.row(i), edge_mat, node_par, edge_par);
+    //model_mat.row(i) = aphi;
+    //Rcout << aphi << endl;
+    model_mat.row(i) = phi_features_C(configs.row(i), edge_mat, node_par, edge_par);
+  }
+  
+  return(model_mat);
+  
   
 }

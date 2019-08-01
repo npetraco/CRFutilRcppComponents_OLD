@@ -7,17 +7,32 @@
 using namespace Rcpp;
 
 // phi_features_C
-arma::Mat<int> phi_features_C(arma::Col<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params);
-RcppExport SEXP _CRFutilRcppComponents_phi_features_C(SEXP configSEXP, SEXP edge_matSEXP, SEXP node_parSEXP, SEXP edge_parSEXP, SEXP num_paramsSEXP) {
+arma::Mat<int> phi_features_C(arma::Mat<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default);
+RcppExport SEXP _CRFutilRcppComponents_phi_features_C(SEXP configSEXP, SEXP edge_matSEXP, SEXP node_parSEXP, SEXP edge_parSEXP, SEXP num_params_defaultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::Col<int> >::type config(configSEXP);
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type config(configSEXP);
     Rcpp::traits::input_parameter< arma::Mat<int> >::type edge_mat(edge_matSEXP);
     Rcpp::traits::input_parameter< arma::Mat<int> >::type node_par(node_parSEXP);
     Rcpp::traits::input_parameter< List >::type edge_par(edge_parSEXP);
-    Rcpp::traits::input_parameter< int >::type num_params(num_paramsSEXP);
-    rcpp_result_gen = Rcpp::wrap(phi_features_C(config, edge_mat, node_par, edge_par, num_params));
+    Rcpp::traits::input_parameter< int >::type num_params_default(num_params_defaultSEXP);
+    rcpp_result_gen = Rcpp::wrap(phi_features_C(config, edge_mat, node_par, edge_par, num_params_default));
+    return rcpp_result_gen;
+END_RCPP
+}
+// compute_model_matrix
+arma::Mat<int> compute_model_matrix(arma::Mat<int> configs, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default);
+RcppExport SEXP _CRFutilRcppComponents_compute_model_matrix(SEXP configsSEXP, SEXP edge_matSEXP, SEXP node_parSEXP, SEXP edge_parSEXP, SEXP num_params_defaultSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type configs(configsSEXP);
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type edge_mat(edge_matSEXP);
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type node_par(node_parSEXP);
+    Rcpp::traits::input_parameter< List >::type edge_par(edge_parSEXP);
+    Rcpp::traits::input_parameter< int >::type num_params_default(num_params_defaultSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_model_matrix(configs, edge_mat, node_par, edge_par, num_params_default));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -91,6 +106,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_CRFutilRcppComponents_phi_features_C", (DL_FUNC) &_CRFutilRcppComponents_phi_features_C, 5},
+    {"_CRFutilRcppComponents_compute_model_matrix", (DL_FUNC) &_CRFutilRcppComponents_compute_model_matrix, 5},
     {"_CRFutilRcppComponents_fix_node_and_edge_par", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par, 2},
     {"_CRFutilRcppComponents_fix_node_and_edge_par2", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par2, 2},
     {"_CRFutilRcppComponents_rcpparma_hello_world", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_hello_world, 0},
