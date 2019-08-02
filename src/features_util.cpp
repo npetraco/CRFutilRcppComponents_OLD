@@ -119,7 +119,7 @@ int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i=R_NilValue, Rcpp::N
 
   //, arma::Mat<int> edge_par=NULL, arma::Mat<int> edge_mat=NULL, std::string printQ=false
   if(node_par.isNotNull()) {
-    Rcout << node_par << endl; 
+    Rcout << *node_par << endl; 
   }
   
   int par_idx = 87;

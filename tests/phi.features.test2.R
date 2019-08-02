@@ -1,4 +1,5 @@
 library(CRFutil)
+library(CRFutilRcppComponents)
 library(rbenchmark)
 library(microbenchmark)
 
@@ -41,4 +42,7 @@ jridx <- 1
 #jridx <- sample(1:nrow(configs), size = 1)
 #configs[jridx,]
 
-get_par_idx(as.matrix(configs[jridx,]), i = 3)
+get_par_idx(as.matrix(configs[jridx,]), i = 3, node_par = theta.pars$node_par)
+
+
+
