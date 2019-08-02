@@ -37,16 +37,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_par_idx
-int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i, Rcpp::Nullable<int> j, Rcpp::Nullable<arma::Mat<int>> node_par);
-RcppExport SEXP _CRFutilRcppComponents_get_par_idx(SEXP configSEXP, SEXP iSEXP, SEXP jSEXP, SEXP node_parSEXP) {
+int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i, Rcpp::Nullable<int> j, Rcpp::Nullable<IntegerMatrix> node_par_in);
+RcppExport SEXP _CRFutilRcppComponents_get_par_idx(SEXP configSEXP, SEXP iSEXP, SEXP jSEXP, SEXP node_par_inSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::Mat<int> >::type config(configSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type i(iSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type j(jSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<arma::Mat<int>> >::type node_par(node_parSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_par_idx(config, i, j, node_par));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<IntegerMatrix> >::type node_par_in(node_par_inSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_par_idx(config, i, j, node_par_in));
     return rcpp_result_gen;
 END_RCPP
 }

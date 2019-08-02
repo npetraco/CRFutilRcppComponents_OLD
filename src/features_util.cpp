@@ -115,12 +115,16 @@ arma::Mat<int> compute_model_matrix(arma::Mat<int> configs, arma::Mat<int> edge_
 }
 
 // [[Rcpp::export]]
-int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i=R_NilValue, Rcpp::Nullable<int> j=R_NilValue, Rcpp::Nullable<arma::Mat<int>> node_par=R_NilValue) {
+int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i=R_NilValue, Rcpp::Nullable<int> j=R_NilValue, Rcpp::Nullable<IntegerMatrix> node_par_in=R_NilValue) {
 
   //, arma::Mat<int> edge_par=NULL, arma::Mat<int> edge_mat=NULL, std::string printQ=false
-  if(node_par.isNotNull()) {
-    Rcout << *node_par << endl; 
+  
+  arma::Mat<int> node_par;
+  if(node_par_in.isNotNull()) {
+    node_par = as<arma::Mat<int>>(node_par_in);
+    //Rcout << node_par << endl; 
   }
+  Rcout << node_par << endl;
   
   int par_idx = 87;
   

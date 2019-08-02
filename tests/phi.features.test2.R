@@ -43,6 +43,5 @@ jridx <- 1
 #configs[jridx,]
 
 get_par_idx(as.matrix(configs[jridx,]), i = 3, node_par = theta.pars$node_par)
-
-
+get_par_idx(as.matrix(configs[jridx,]), i = 3)
 
