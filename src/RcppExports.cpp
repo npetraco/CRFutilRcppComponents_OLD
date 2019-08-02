@@ -36,9 +36,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_par_idx
-int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i_in, Rcpp::Nullable<int> j_in, Rcpp::Nullable<IntegerMatrix> node_par_in, Rcpp::Nullable<List> edge_par_in, Rcpp::Nullable<IntegerMatrix> edge_mat_in, bool printQ);
-RcppExport SEXP _CRFutilRcppComponents_get_par_idx(SEXP configSEXP, SEXP i_inSEXP, SEXP j_inSEXP, SEXP node_par_inSEXP, SEXP edge_par_inSEXP, SEXP edge_mat_inSEXP, SEXP printQSEXP) {
+// get_par_off
+int get_par_off(arma::Mat<int> config, Rcpp::Nullable<int> i_in, Rcpp::Nullable<int> j_in, Rcpp::Nullable<IntegerMatrix> node_par_in, Rcpp::Nullable<List> edge_par_in, Rcpp::Nullable<IntegerMatrix> edge_mat_in, bool printQ);
+RcppExport SEXP _CRFutilRcppComponents_get_par_off(SEXP configSEXP, SEXP i_inSEXP, SEXP j_inSEXP, SEXP node_par_inSEXP, SEXP edge_par_inSEXP, SEXP edge_mat_inSEXP, SEXP printQSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,7 +49,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::Nullable<List> >::type edge_par_in(edge_par_inSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<IntegerMatrix> >::type edge_mat_in(edge_mat_inSEXP);
     Rcpp::traits::input_parameter< bool >::type printQ(printQSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_par_idx(config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in, printQ));
+    rcpp_result_gen = Rcpp::wrap(get_par_off(config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in, printQ));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -93,7 +93,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_CRFutilRcppComponents_phi_features_C", (DL_FUNC) &_CRFutilRcppComponents_phi_features_C, 5},
     {"_CRFutilRcppComponents_compute_model_matrix", (DL_FUNC) &_CRFutilRcppComponents_compute_model_matrix, 5},
-    {"_CRFutilRcppComponents_get_par_idx", (DL_FUNC) &_CRFutilRcppComponents_get_par_idx, 7},
+    {"_CRFutilRcppComponents_get_par_off", (DL_FUNC) &_CRFutilRcppComponents_get_par_off, 7},
     {"_CRFutilRcppComponents_fix_node_and_edge_par", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par, 2},
     {"_CRFutilRcppComponents_fix_node_and_edge_par2", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par2, 2},
     {"_CRFutilRcppComponents_row_match", (DL_FUNC) &_CRFutilRcppComponents_row_match, 2},

@@ -9,8 +9,8 @@ compute_model_matrix <- function(configs, edge_mat, node_par, edge_par, num_para
     .Call(`_CRFutilRcppComponents_compute_model_matrix`, configs, edge_mat, node_par, edge_par, num_params_default)
 }
 
-get_par_idx <- function(config, i_in = NULL, j_in = NULL, node_par_in = NULL, edge_par_in = NULL, edge_mat_in = NULL, printQ = FALSE) {
-    .Call(`_CRFutilRcppComponents_get_par_idx`, config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in, printQ)
+get_par_off <- function(config, i_in = NULL, j_in = NULL, node_par_in = NULL, edge_par_in = NULL, edge_mat_in = NULL, printQ = FALSE) {
+    .Call(`_CRFutilRcppComponents_get_par_off`, config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in, printQ)
 }
 
 fix_node_and_edge_par <- function(node_par, edge_par) {

@@ -115,7 +115,7 @@ arma::Mat<int> compute_model_matrix(arma::Mat<int> configs, arma::Mat<int> edge_
 }
 
 // [[Rcpp::export]]
-int get_par_idx(arma::Mat<int>                config, 
+int get_par_off(arma::Mat<int>                config, 
                 Rcpp::Nullable<int>           i_in        = R_NilValue, 
                 Rcpp::Nullable<int>           j_in        = R_NilValue, 
                 Rcpp::Nullable<IntegerMatrix> node_par_in = R_NilValue,
@@ -124,47 +124,88 @@ int get_par_idx(arma::Mat<int>                config,
                 bool                          printQ      = false) {
 
   int i, j;
-  if(i_in.isNotNull() && j_in.isNotNull()) {
-    i = as<int>(i_in);
-    j = as<int>(j_in);
-    //Rcout << i << endl;
-    //Rcout << j << endl;
-  }
-  
-  arma::Mat<int> node_par;
-  if(node_par_in.isNotNull()) {
-    node_par = as<arma::Mat<int>>(node_par_in);
-    //Rcout << node_par << endl;
-  }
-  
   List edge_par;
-  if(edge_par_in.isNotNull()) {
-    edge_par = edge_par_in;
-    // for(int i=0; i<edge_par.size(); ++i){
-    //   Rcout << as<arma::Mat<int>>(edge_par(i)) << endl;
-    // }
-  }
-  
   arma::Mat<int> edge_mat;
-  if(edge_mat_in.isNotNull()) {
-    edge_mat = as<arma::Mat<int>>(edge_mat_in);
-    //Rcout << edge_mat << endl;
+  arma::Mat<int> node_par;
+  int par_off = -1;          // parameter offset NOT index
+  
+  if(i_in.isNotNull()) {
+    i = as<int>(i_in);
+    if(j_in.isNotNull()) {
+      
+      // An edge was input
+      j = as<int>(j_in);
+      
+      // Need edge_par
+      if(edge_par_in.isNotNull()) {
+        edge_par = edge_par_in;
+        // for(int i=0; i<edge_par.size(); ++i){
+        //   Rcout << as<arma::Mat<int>>(edge_par(i)) << endl;
+        // }
+      } else {
+        stop("Edge param queried but no edge par input.");
+      }
+      
+      // Need edge mat
+      if(edge_mat_in.isNotNull()) {
+        edge_mat = as<arma::Mat<int>>(edge_mat_in);
+        //Rcout << edge_mat << endl;
+      } else {
+        stop("Edge param queried but no edge mat input.");
+      }
+      
+      // Check and see if the edge indices are together in the edge matrix
+      // Note: actually get the edge offset, not index
+      arma::Mat<int> avec(1,2);
+      avec(0,0) = i;
+      avec(0,1) = j;
+  
+      // edge offset in the edge matrix:
+      arma::uvec edge_off = row_match(avec, edge_mat);
+      
+      if(edge_off.size() == 0) {
+        Rcout << "Input edge indices: i=" << i  << " j=" << j << endl;
+        stop("Input edge indices not found in edge mat");
+      }
+      if(edge_off.size() > 1) {
+        Rcout << "Input edge indices: i=" << i << " j=" << j << endl;
+        stop("Something is wierd. Mutiple instances of this edge found in edge mat.");
+      }
+     
+      // If all looks ok, compute parameter offset (not index!) associated with edge
+      arma::Mat<int> aepm;
+      aepm = as<arma::Mat<int>>(edge_par(edge_off(0)));
+      int left_off  = edge_mat(edge_off(0),0) - 1;                                    // offset NOT index, do -1
+      int right_off = edge_mat(edge_off(0),1) - 1;                                    // offset NOT index, do -1
+      
+      arma::Mat<int> tmp;                                                             // to hold product
+      tmp = ff_C(config(left_off)).t() * aepm * ff_C(config(right_off));
+      
+      par_off = tmp(0,0) - 1;                                                         // offset NOT index, do -1
+      
+    } else {
+      
+      //A node was input
+      if(node_par_in.isNotNull()) {
+        node_par = as<arma::Mat<int>>(node_par_in);
+        //Rcout << node_par << endl;
+      } else {
+        stop("Node param queried but no node par input.");
+      }
+      
+      // Need to get node row (offset) out of node par
+      // Note: assumes each node only has one parameter. One parameter can be shared
+      // between many nodes however.
+      
+      // If all looks ok, compute parameter offset (not index!) associated with node
+      int node_off = i-1;                                                  // Just for readability for when I forget how I did this...
+      par_off = dot( node_par.row(node_off), ff_C(config(node_off)) ) - 1; // -1 bec we want offsets NOT indices
+    }
+    
+  } else {
+    stop("No node i index entered!");
   }
   
-  // Check and see if the edge is in the edge matrix
-  arma::Mat<int> avec(1,2);
-  avec(0,0) = i;
-  avec(0,1) = j;
-  //Rcout << avec << endl;
-  arma::uvec edge_idx = row_match(avec, edge_mat);
-  if(edge_idx.size() == 0) {
-    stop("Edge not found in edge mat");
-  }
-  
-  //check size for 0 and geq 1
-  
-  
-  int par_idx = 87;
-  
-  return par_idx;
+  // Note: If offset is -1 that means parameter is not associated with this node/edge and spin set
+  return par_off;
 }
