@@ -129,3 +129,4 @@ benchmark(
     phi_features_C(as.matrix(configs[jridx,]), rmod$edges, node_par = theta.pars$node_par, edge_par = theta.pars$edge_par)  
   }))
 )
+

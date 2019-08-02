@@ -36,6 +36,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_par_idx
+int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i, Rcpp::Nullable<int> j, Rcpp::Nullable<arma::Mat<int>> node_par);
+RcppExport SEXP _CRFutilRcppComponents_get_par_idx(SEXP configSEXP, SEXP iSEXP, SEXP jSEXP, SEXP node_parSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type config(configSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type i(iSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type j(jSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<arma::Mat<int>> >::type node_par(node_parSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_par_idx(config, i, j, node_par));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fix_node_and_edge_par
 List fix_node_and_edge_par(arma::Cube<int> node_par, List edge_par);
 RcppExport SEXP _CRFutilRcppComponents_fix_node_and_edge_par(SEXP node_parSEXP, SEXP edge_parSEXP) {
@@ -107,6 +121,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_CRFutilRcppComponents_phi_features_C", (DL_FUNC) &_CRFutilRcppComponents_phi_features_C, 5},
     {"_CRFutilRcppComponents_compute_model_matrix", (DL_FUNC) &_CRFutilRcppComponents_compute_model_matrix, 5},
+    {"_CRFutilRcppComponents_get_par_idx", (DL_FUNC) &_CRFutilRcppComponents_get_par_idx, 4},
     {"_CRFutilRcppComponents_fix_node_and_edge_par", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par, 2},
     {"_CRFutilRcppComponents_fix_node_and_edge_par2", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par2, 2},
     {"_CRFutilRcppComponents_rcpparma_hello_world", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_hello_world, 0},

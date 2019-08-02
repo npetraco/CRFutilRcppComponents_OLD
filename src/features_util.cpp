@@ -25,7 +25,8 @@ arma::Mat<int> phi_features_C(arma::Mat<int> config, arma::Mat<int> edge_mat, ar
       if(amax > num_params){
         num_params = amax;
       } else {
-        num_params = num_params_default;
+        //num_params = num_params_default;
+        stop("num_pars specification broken...");
       }
     }
     
@@ -95,28 +96,33 @@ arma::Mat<int> compute_model_matrix(arma::Mat<int> configs, arma::Mat<int> edge_
       if(amax > num_params){
         num_params = amax;
       } else {
-        num_params = num_params_default;
+        //num_params = num_params_default;
+        stop("num_pars specification broken...");
       }
     }
 
   }
   
-  //Rcout << num_configs << endl;
-  //Rcout << num_params << endl;
-  
   arma::Mat<int> model_mat(num_configs, num_params);
   
-  //arma::Mat<int> aphi(num_params,1);
   for(int i=0; i<num_configs; ++i){
-    //Rcout << i << endl;
-    //Rcout << configs.row(i) << endl;
-    //aphi = phi_features_C(configs.row(i), edge_mat, node_par, edge_par);
-    //model_mat.row(i) = aphi;
-    //Rcout << aphi << endl;
     model_mat.row(i) = phi_features_C(configs.row(i), edge_mat, node_par, edge_par);
   }
   
   return(model_mat);
   
   
+}
+
+// [[Rcpp::export]]
+int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i=R_NilValue, Rcpp::Nullable<int> j=R_NilValue, Rcpp::Nullable<arma::Mat<int>> node_par=R_NilValue) {
+
+  //, arma::Mat<int> edge_par=NULL, arma::Mat<int> edge_mat=NULL, std::string printQ=false
+  if(node_par.isNotNull()) {
+    Rcout << node_par << endl; 
+  }
+  
+  int par_idx = 87;
+  
+  return par_idx;
 }
