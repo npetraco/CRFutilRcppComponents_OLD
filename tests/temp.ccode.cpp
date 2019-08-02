@@ -78,3 +78,16 @@ Rcout << ff_C(config(left_off)) << aepm << ff_C(config(right_off)) << endl;
 Rcout << endl;
 Rcout << "tmp: " << tmp << "phi_off: " << phi_off << endl;
 Rcout << "===========================" << endl;
+
+
+
+
+
+arma::uvec iidxs = find(edge_mat.col(0) == i);
+arma::uvec jidxs = find(edge_mat.col(1) == j);
+arma::uvec comn  = intersect(iidxs,jidxs);
+//Rcout << as<IntegerVector>(iidxs) << endl;
+Rcout << iidxs << endl;
+Rcout << jidxs << endl;
+// intersect???
+Rcout << comn << endl;

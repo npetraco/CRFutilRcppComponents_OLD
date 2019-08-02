@@ -124,16 +124,11 @@ int get_par_idx(arma::Mat<int>                config,
                 bool                          printQ      = false) {
 
   int i, j;
-  arma::Mat<int> avec(1,2);
   if(i_in.isNotNull() && j_in.isNotNull()) {
     i = as<int>(i_in);
     j = as<int>(j_in);
     //Rcout << i << endl;
     //Rcout << j << endl;
-    
-    avec(0,0) = i;
-    avec(0,1) = j;
-    Rcout << avec << endl;
   }
   
   arma::Mat<int> node_par;
@@ -155,14 +150,19 @@ int get_par_idx(arma::Mat<int>                config,
     edge_mat = as<arma::Mat<int>>(edge_mat_in);
     //Rcout << edge_mat << endl;
   }
-  arma::uvec iidxs = find(edge_mat.col(0) == i);
-  arma::uvec jidxs = find(edge_mat.col(1) == j);
-  arma::uvec comn  = intersect(iidxs,jidxs);
-  //Rcout << as<IntegerVector>(iidxs) << endl;
-  Rcout << iidxs << endl;
-  Rcout << jidxs << endl;
-  // intersect???
-  Rcout << comn << endl;
+  
+  // Check and see if the edge is in the edge matrix
+  arma::Mat<int> avec(1,2);
+  avec(0,0) = i;
+  avec(0,1) = j;
+  //Rcout << avec << endl;
+  arma::uvec edge_idx = row_match(avec, edge_mat);
+  if(edge_idx.size() == 0) {
+    stop("Edge not found in edge mat");
+  }
+  
+  //check size for 0 and geq 1
+  
   
   int par_idx = 87;
   
