@@ -41,7 +41,25 @@ theta.pars   <- fix_node_and_edge_par(node_par = rmod$node.par, edge_par = rmod$
 jridx <- 1
 #jridx <- sample(1:nrow(configs), size = 1)
 #configs[jridx,]
-
+rmod$edges
 get_par_idx(as.matrix(configs[jridx,]), i = 3, node_par = theta.pars$node_par)
-get_par_idx(as.matrix(configs[jridx,]), i = 3)
+get_par_idx(as.matrix(configs[jridx,]), 
+            i = 15,
+            j = 18,
+            node_par = theta.pars$node_par, 
+            edge_par = theta.pars$edge_par,
+            edge_mat_in = rmod$edges)
 
+tm <- rbind(
+  c(1,2,3),
+  c(4,5,6),
+  c(7,8,6)
+)
+row_match(as.matrix(tm[3,]), tm)
+row_match(tm[1,], tm)
+row_match(as.matrix(c(4,5,6)), tm)
+
+jridx <- sample(1:nrow(configs), size = 1)
+row_match(as.matrix(configs[jridx,]), configs) + 1
+jridx
+configs[jridx,]

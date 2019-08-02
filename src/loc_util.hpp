@@ -85,3 +85,29 @@ List fix_node_and_edge_par2(arma::Cube<int> node_par, List edge_par){
   return theta_pars;
   
 }
+
+// [[Rcpp::export]]
+arma::uvec row_match(arma::Mat<int> x, arma::Mat<int> table){
+  
+  // Assume x is a vector with one row or one column
+  List indexVectors(x.size());
+  
+  arma::uvec anidxvec;
+  arma::uvec matching_row_idxs;
+  
+  matching_row_idxs = intersect(find(table.col(0) == x(0)), find(table.col(1) == x(1)));
+    
+  for(int i=2; i<x.size(); ++i){
+    //anidxvec = find(table.col(i) == x(i));
+    //indexVectors(i) = anidxvec;
+    //Rcout << anidxvec << endl;
+    //Rcout << anidxvec.size() << endl;
+    matching_row_idxs = intersect(matching_row_idxs, find(table.col(i) == x(i)));
+  }
+  
+  //arma::uvec matching_row_idxs;
+  //matching_row_idxs = intersect(as<arma::uvec>(indexVectors(0)), as<arma::uvec>(indexVectors(1)));
+  //Rcout << matching_row_idxs << endl;
+  
+  return matching_row_idxs;
+}

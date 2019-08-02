@@ -37,16 +37,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_par_idx
-int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i, Rcpp::Nullable<int> j, Rcpp::Nullable<IntegerMatrix> node_par_in);
-RcppExport SEXP _CRFutilRcppComponents_get_par_idx(SEXP configSEXP, SEXP iSEXP, SEXP jSEXP, SEXP node_par_inSEXP) {
+int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i_in, Rcpp::Nullable<int> j_in, Rcpp::Nullable<IntegerMatrix> node_par_in, Rcpp::Nullable<List> edge_par_in, Rcpp::Nullable<IntegerMatrix> edge_mat_in, bool printQ);
+RcppExport SEXP _CRFutilRcppComponents_get_par_idx(SEXP configSEXP, SEXP i_inSEXP, SEXP j_inSEXP, SEXP node_par_inSEXP, SEXP edge_par_inSEXP, SEXP edge_mat_inSEXP, SEXP printQSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::Mat<int> >::type config(configSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type i(iSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type j(jSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type i_in(i_inSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type j_in(j_inSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<IntegerMatrix> >::type node_par_in(node_par_inSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_par_idx(config, i, j, node_par_in));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<List> >::type edge_par_in(edge_par_inSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<IntegerMatrix> >::type edge_mat_in(edge_mat_inSEXP);
+    Rcpp::traits::input_parameter< bool >::type printQ(printQSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_par_idx(config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in, printQ));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -74,46 +77,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpparma_hello_world
-arma::mat rcpparma_hello_world();
-RcppExport SEXP _CRFutilRcppComponents_rcpparma_hello_world() {
+// row_match
+arma::uvec row_match(arma::Mat<int> x, arma::Mat<int> table);
+RcppExport SEXP _CRFutilRcppComponents_row_match(SEXP xSEXP, SEXP tableSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpparma_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_outerproduct
-arma::mat rcpparma_outerproduct(const arma::colvec& x);
-RcppExport SEXP _CRFutilRcppComponents_rcpparma_outerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_outerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_innerproduct
-double rcpparma_innerproduct(const arma::colvec& x);
-RcppExport SEXP _CRFutilRcppComponents_rcpparma_innerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_innerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_bothproducts
-Rcpp::List rcpparma_bothproducts(const arma::colvec& x);
-RcppExport SEXP _CRFutilRcppComponents_rcpparma_bothproducts(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_bothproducts(x));
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::Mat<int> >::type table(tableSEXP);
+    rcpp_result_gen = Rcpp::wrap(row_match(x, table));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,13 +93,10 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_CRFutilRcppComponents_phi_features_C", (DL_FUNC) &_CRFutilRcppComponents_phi_features_C, 5},
     {"_CRFutilRcppComponents_compute_model_matrix", (DL_FUNC) &_CRFutilRcppComponents_compute_model_matrix, 5},
-    {"_CRFutilRcppComponents_get_par_idx", (DL_FUNC) &_CRFutilRcppComponents_get_par_idx, 4},
+    {"_CRFutilRcppComponents_get_par_idx", (DL_FUNC) &_CRFutilRcppComponents_get_par_idx, 7},
     {"_CRFutilRcppComponents_fix_node_and_edge_par", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par, 2},
     {"_CRFutilRcppComponents_fix_node_and_edge_par2", (DL_FUNC) &_CRFutilRcppComponents_fix_node_and_edge_par2, 2},
-    {"_CRFutilRcppComponents_rcpparma_hello_world", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_hello_world, 0},
-    {"_CRFutilRcppComponents_rcpparma_outerproduct", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_outerproduct, 1},
-    {"_CRFutilRcppComponents_rcpparma_innerproduct", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_innerproduct, 1},
-    {"_CRFutilRcppComponents_rcpparma_bothproducts", (DL_FUNC) &_CRFutilRcppComponents_rcpparma_bothproducts, 1},
+    {"_CRFutilRcppComponents_row_match", (DL_FUNC) &_CRFutilRcppComponents_row_match, 2},
     {NULL, NULL, 0}
 };
 

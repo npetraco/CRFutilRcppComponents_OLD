@@ -9,8 +9,8 @@ compute_model_matrix <- function(configs, edge_mat, node_par, edge_par, num_para
     .Call(`_CRFutilRcppComponents_compute_model_matrix`, configs, edge_mat, node_par, edge_par, num_params_default)
 }
 
-get_par_idx <- function(config, i = NULL, j = NULL, node_par_in = NULL) {
-    .Call(`_CRFutilRcppComponents_get_par_idx`, config, i, j, node_par_in)
+get_par_idx <- function(config, i_in = NULL, j_in = NULL, node_par_in = NULL, edge_par_in = NULL, edge_mat_in = NULL, printQ = FALSE) {
+    .Call(`_CRFutilRcppComponents_get_par_idx`, config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in, printQ)
 }
 
 fix_node_and_edge_par <- function(node_par, edge_par) {
@@ -21,19 +21,7 @@ fix_node_and_edge_par2 <- function(node_par, edge_par) {
     .Call(`_CRFutilRcppComponents_fix_node_and_edge_par2`, node_par, edge_par)
 }
 
-rcpparma_hello_world <- function() {
-    .Call(`_CRFutilRcppComponents_rcpparma_hello_world`)
-}
-
-rcpparma_outerproduct <- function(x) {
-    .Call(`_CRFutilRcppComponents_rcpparma_outerproduct`, x)
-}
-
-rcpparma_innerproduct <- function(x) {
-    .Call(`_CRFutilRcppComponents_rcpparma_innerproduct`, x)
-}
-
-rcpparma_bothproducts <- function(x) {
-    .Call(`_CRFutilRcppComponents_rcpparma_bothproducts`, x)
+row_match <- function(x, table) {
+    .Call(`_CRFutilRcppComponents_row_match`, x, table)
 }
 

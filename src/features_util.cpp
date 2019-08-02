@@ -115,16 +115,54 @@ arma::Mat<int> compute_model_matrix(arma::Mat<int> configs, arma::Mat<int> edge_
 }
 
 // [[Rcpp::export]]
-int get_par_idx(arma::Mat<int> config, Rcpp::Nullable<int> i=R_NilValue, Rcpp::Nullable<int> j=R_NilValue, Rcpp::Nullable<IntegerMatrix> node_par_in=R_NilValue) {
+int get_par_idx(arma::Mat<int>                config, 
+                Rcpp::Nullable<int>           i_in        = R_NilValue, 
+                Rcpp::Nullable<int>           j_in        = R_NilValue, 
+                Rcpp::Nullable<IntegerMatrix> node_par_in = R_NilValue,
+                Rcpp::Nullable<List>          edge_par_in = R_NilValue,
+                Rcpp::Nullable<IntegerMatrix> edge_mat_in = R_NilValue,
+                bool                          printQ      = false) {
 
-  //, arma::Mat<int> edge_par=NULL, arma::Mat<int> edge_mat=NULL, std::string printQ=false
+  int i, j;
+  arma::Mat<int> avec(1,2);
+  if(i_in.isNotNull() && j_in.isNotNull()) {
+    i = as<int>(i_in);
+    j = as<int>(j_in);
+    //Rcout << i << endl;
+    //Rcout << j << endl;
+    
+    avec(0,0) = i;
+    avec(0,1) = j;
+    Rcout << avec << endl;
+  }
   
   arma::Mat<int> node_par;
   if(node_par_in.isNotNull()) {
     node_par = as<arma::Mat<int>>(node_par_in);
-    //Rcout << node_par << endl; 
+    //Rcout << node_par << endl;
   }
-  Rcout << node_par << endl;
+  
+  List edge_par;
+  if(edge_par_in.isNotNull()) {
+    edge_par = edge_par_in;
+    // for(int i=0; i<edge_par.size(); ++i){
+    //   Rcout << as<arma::Mat<int>>(edge_par(i)) << endl;
+    // }
+  }
+  
+  arma::Mat<int> edge_mat;
+  if(edge_mat_in.isNotNull()) {
+    edge_mat = as<arma::Mat<int>>(edge_mat_in);
+    //Rcout << edge_mat << endl;
+  }
+  arma::uvec iidxs = find(edge_mat.col(0) == i);
+  arma::uvec jidxs = find(edge_mat.col(1) == j);
+  arma::uvec comn  = intersect(iidxs,jidxs);
+  //Rcout << as<IntegerVector>(iidxs) << endl;
+  Rcout << iidxs << endl;
+  Rcout << jidxs << endl;
+  // intersect???
+  Rcout << comn << endl;
   
   int par_idx = 87;
   
