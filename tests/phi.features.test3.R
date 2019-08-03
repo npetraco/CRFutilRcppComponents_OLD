@@ -36,15 +36,15 @@ configs <- configs.and.counts[,1:ncol(samps)]
 configs <- as.matrix(sapply(configs, as.numeric))
 head(configs)
 
-
 theta.pars   <- fix_node_and_edge_par(node_par = rmod$node.par, edge_par = rmod$edge.par)
+
 jridx <- 1
 jridx <- sample(1:nrow(configs), size = 1)
 #configs[jridx,]
 rmod$edges
 as.matrix(configs[jridx,])
 
-get_par_off(as.matrix(configs[jridx,]), i_in = 17, node_par_in = theta.pars$node_par)
+get_par_off(as.matrix(configs[jridx,]), i_in = 16, node_par_in = theta.pars$node_par)
 get_par_off(as.matrix(configs[jridx,]), 
             i_in = 14,
             j_in = 15,
@@ -184,3 +184,44 @@ benchmark(replications = 1000,
                               ff = f0
           )
 )
+
+
+
+# Phi components:
+# Check edges:
+num.rand.configs <- 2000
+jridxs <- sample(1:nrow(configs), size = num.rand.configs, replace = F)
+
+for(jii in 1:length(jridxs)) {
+  
+  jridx <- jridxs[jii]
+  a.config <- configs[jridx,]
+  
+  for(jedge.idx in 1:nrow(rmod$edges)) {
+    
+    jedg <- rmod$edges[jedge.idx, ]
+    cidx <- phi_component(as.matrix(a.config), 
+                        i_in = jedg[1],
+                        j_in = jedg[2],
+                        #node_par_in  = theta.pars$node_par, 
+                        edge_par_in  = theta.pars$edge_par,
+                        edge_mat_in = rmod$edges)
+    
+    ridx <- phi.component(a.config,
+                        i = jedg[1],
+                        j = jedg[2],
+                        #node.par = rmod$node.par,
+                        edge.par = rmod$edge.par,
+                        edge.mat = rmod$edges, ff = f0)
+
+    if(cidx != ridx) {
+      print(jedg)
+      print(cidx)
+      print(ridx)
+      print(a.config)
+      stop("Ack!")
+    }
+    
+  }
+  
+}

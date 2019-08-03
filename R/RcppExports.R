@@ -13,6 +13,10 @@ get_par_off <- function(config, i_in = NULL, j_in = NULL, node_par_in = NULL, ed
     .Call(`_CRFutilRcppComponents_get_par_off`, config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in, printQ)
 }
 
+phi_component <- function(config, i_in = NULL, j_in = NULL, node_par_in = NULL, edge_par_in = NULL, edge_mat_in = NULL) {
+    .Call(`_CRFutilRcppComponents_phi_component`, config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in)
+}
+
 fix_node_and_edge_par <- function(node_par, edge_par) {
     .Call(`_CRFutilRcppComponents_fix_node_and_edge_par`, node_par, edge_par)
 }

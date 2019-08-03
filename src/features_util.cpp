@@ -209,3 +209,27 @@ int get_par_off(arma::Mat<int>                config,
   // Note: If offset is -1 that means parameter is not associated with this node/edge and spin set
   return par_off;
 }
+
+// [[Rcpp::export]]
+int phi_component(arma::Mat<int>                config,
+                  Rcpp::Nullable<int>           i_in        = R_NilValue, 
+                  Rcpp::Nullable<int>           j_in        = R_NilValue, 
+                  Rcpp::Nullable<IntegerMatrix> node_par_in = R_NilValue,
+                  Rcpp::Nullable<List>          edge_par_in = R_NilValue,
+                  Rcpp::Nullable<IntegerMatrix> edge_mat_in = R_NilValue) {
+  
+  int par_off = get_par_off(config, i_in, j_in, node_par_in, edge_par_in, edge_mat_in);
+  
+  int swtch;
+  if(par_off == -1) {
+    swtch = 1;
+  } else {
+    swtch = 0;
+  }
+
+  int comp = 1 - swtch;
+    
+
+  return comp;
+
+}
