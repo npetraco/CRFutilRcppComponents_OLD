@@ -1,11 +1,26 @@
 #include "RcppArmadillo.h"
-#include "CRFutilRcppComponents.h"
+#include "loc_util.hpp"
 
 using namespace Rcpp;
-using namespace CRFutilRcppComponents;
 using namespace std;
 
-//[[Rcpp::export]]
+arma::Mat<int> phi_features_C(arma::Mat<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default);
+arma::Mat<int> compute_model_matrix(arma::Mat<int> configs, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default);
+int get_par_off(arma::Mat<int>                config, 
+                Rcpp::Nullable<int>           i_in, 
+                Rcpp::Nullable<int>           j_in, 
+                Rcpp::Nullable<IntegerMatrix> node_par_in,
+                Rcpp::Nullable<List>          edge_par_in,
+                Rcpp::Nullable<IntegerMatrix> edge_mat_in,
+                bool                          printQ);
+int phi_component(arma::Mat<int>                config,
+                  Rcpp::Nullable<int>           i_in, 
+                  Rcpp::Nullable<int>           j_in, 
+                  Rcpp::Nullable<IntegerMatrix> node_par_in,
+                  Rcpp::Nullable<List>          edge_par_in,
+                  Rcpp::Nullable<IntegerMatrix> edge_mat_in);
+  
+// [[Rcpp::export]]
 arma::Mat<int> phi_features_C(arma::Mat<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default=0) {
   
   int num_nodes = config.size();
@@ -229,6 +244,7 @@ int phi_component(arma::Mat<int>                config,
   }
 
   int comp = 1 - swtch;
+    
 
   return comp;
 

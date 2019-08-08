@@ -1,11 +1,10 @@
 #include "RcppArmadillo.h"
-#include "CRFutilRcppComponents.h"
+#include "loc_util.hpp"
 
 using namespace Rcpp;
-using namespace CRFutilRcppComponents;
 using namespace std;
 
-//[[Rcpp::export]]
+// [[Rcpp::export]]
 arma::Mat<int> phi_features_C(arma::Mat<int> config, arma::Mat<int> edge_mat, arma::Mat<int> node_par, List edge_par, int num_params_default=0) {
   
   int num_nodes = config.size();
@@ -229,6 +228,7 @@ int phi_component(arma::Mat<int>                config,
   }
 
   int comp = 1 - swtch;
+    
 
   return comp;
 

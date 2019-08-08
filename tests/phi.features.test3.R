@@ -126,7 +126,7 @@ benchmark(replications = 1000,
 
 
 
-# Check nodes:
+ # Check nodes:
 num.rand.configs <- 5000
 rmod$n.nodes
 jridxs <- sample(1:nrow(configs), size = num.rand.configs, replace = F)
